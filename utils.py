@@ -9,6 +9,8 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
+
+parser = argparse.ArgumentParser()
 args = parser.parse_args()
 
 
