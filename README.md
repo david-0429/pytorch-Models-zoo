@@ -8,7 +8,25 @@ Image Models implements for experiments using pytorch and wandb(only Classificat
 - numpy
 - wandb
 
-### Training
+## Usage
+
+### 1. enter directory
+```bash
+$ cd pytorch-Models-zoo
+```
+
+### 2. dataset
+I will use cifar100 dataset from torchvision since it's more convenient, but I also
+kept the sample code for writing your own dataset module in dataset folder, as an
+example for people don't know how to write it.
+
+### 3. run wandb
+Install wandb
+```bash
+$ pip install wandb
+```
+
+### 4. Training
 Run ```train.py```
 ```
 !python train.py \
