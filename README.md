@@ -1,5 +1,5 @@
-# models-zoo
-Computer Vision models implements for experiments using pytorch
+# pytorch-Models-zoo
+Image Models implements for experiments using pytorch(only Classification....)
 
 ### Training
 Run ```train.py```
