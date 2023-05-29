@@ -1,18 +1,92 @@
 import os
 import datetime
 import numpy
+import sys
+import re
 import argparse
 
 import torch
 import torchvision
 import torchvision.transforms as transforms
 
-import models
-
 args = parser.parse_args()
 
 
-def get_network():
+def get_network(args):
+    """ return given network
+    """
+
+    if args.net == 'vgg16':
+        from models.vgg import vgg16_bn
+        net = vgg16_bn()
+    elif args.net == 'vgg13':
+        from models.vgg import vgg13_bn
+        net = vgg13_bn()
+    elif args.net == 'vgg11':
+        from models.vgg import vgg11_bn
+        net = vgg11_bn()
+    elif args.net == 'vgg19':
+        from models.vgg import vgg19_bn
+        net = vgg19_bn()
+    elif args.net == 'densenet121':
+        from models.densenet import densenet121
+        net = densenet121()
+    elif args.net == 'densenet161':
+        from models.densenet import densenet161
+        net = densenet161()
+    elif args.net == 'densenet169':
+        from models.densenet import densenet169
+        net = densenet169()
+    elif args.net == 'densenet201':
+        from models.densenet import densenet201
+        net = densenet201()
+    elif args.net == 'googlenet':
+        from models.googlenet import googlenet
+        net = googlenet()
+    elif args.net == 'inceptionv3':
+        from models.inceptionv3 import inceptionv3
+        net = inceptionv3()
+    elif args.net == 'xception':
+        from models.xception import xception
+        net = xception()
+    elif args.net == 'resnet18':
+        from models.resnet import resnet18
+        net = resnet18()
+    elif args.net == 'resnet34':
+        from models.resnet import resnet34
+        net = resnet34()
+    elif args.net == 'resnet50':
+        from models.resnet import resnet50
+        net = resnet50()
+    elif args.net == 'resnet101':
+        from models.resnet import resnet101
+        net = resnet101()
+    elif args.net == 'resnet152':
+        from models.resnet import resnet152
+        net = resnet152()
+    elif args.net == 'shufflenet':
+        from models.shufflenet import shufflenet
+        net = shufflenet()
+    elif args.net == 'squeezenet':
+        from models.squeezenet import squeezenet
+        net = squeezenet()
+    elif args.net == 'mobilenet':
+        from models.mobilenet import mobilenet
+        net = mobilenet()
+    elif args.net == 'mobilenetv2':
+        from models.mobilenetv2 import mobilenetv2
+        net = mobilenetv2()
+    elif args.net == 'wideresnet':
+        from models.wideresidual import wideresnet
+        net = wideresnet()
+    else:
+        print('the network name you have entered is not supported yet')
+        sys.exit()
+
+    if args.gpu: #use_gpu
+        net = net.cuda()
+
+    return net
 
 def transform_train(mean, std, agrs):
     if args.DA == "non":
