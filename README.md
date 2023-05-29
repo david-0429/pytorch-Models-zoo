@@ -10,12 +10,12 @@ Image Models implements for experiments using pytorch and wandb(only Classificat
 
 ## Usage
 
-### 1. enter directory
+### 1. Enter directory
 ```bash
 $ cd pytorch-Models-zoo
 ```
 
-### 2. run wandb
+### 2. Run wandb
 Install wandb
 ```bash
 $ pip install wandb
