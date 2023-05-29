@@ -14,7 +14,7 @@ import torchvision.transforms as transforms
 import data
 import utils
 
-parser = argparse.ArgumentParser(description='CIFAR-100 training')
+parser = argparse.ArgumentParser()
 parser.add_argument('-data', type=str, default='../data')
 parser.add_argument('-name', type=str)
 parser.add_argument('-net', type=str, required=True, help='net type')
