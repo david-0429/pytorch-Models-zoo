@@ -17,24 +17,19 @@ from data.CIFAR100 import CIFAR100_train_loader, CIFAR100_test_loader
 
 from utils import get_network
 
-def parse():
-  parser = argparse.ArgumentParser()
-  parser.add_argument('--data', default='CIFAR100', type=str, choices=['CIFAR10', 'CIFAR100'])
-  parser.add_argument('--name', type=str)
-  parser.add_argument('--net', type=str, default='resnet50', help='net type')
-  parser.add_argument('--epochs', default=200, type=int, help='number of total epochs to run')
-  parser.add_argument('--batch_size', default=128, type=int, help='mini-batch size (default: 256)')
-  parser.add_argument('--lr', default=0.01, type=float, help='initial learning rate')
-  #parser.add_argument('--warm', type=int, default=1, help='warm up training phase')
-  parser.add_argument('--DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
-  parser.add_argument('--DA_test', default='non', type=str)
-  parser.add_argument('--gpu', action='store_true', default=False, help='use gpu or not')
+parser = argparse.ArgumentParser()
+parser.add_argument('--data', default='CIFAR100', type=str, choices=['CIFAR10', 'CIFAR100'])
+parser.add_argument('--name', type=str)
+parser.add_argument('--net', type=str, default='resnet50', help='net type')
+parser.add_argument('--epochs', default=200, type=int, help='number of total epochs to run')
+parser.add_argument('--batch_size', default=128, type=int, help='mini-batch size (default: 256)')
+parser.add_argument('--lr', default=0.01, type=float, help='initial learning rate')
+#parser.add_argument('--warm', type=int, default=1, help='warm up training phase')
+parser.add_argument('--DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
+parser.add_argument('--DA_test', default='non', type=str)
+parser.add_argument('--gpu', action='store_true', default=False, help='use gpu or not')
 
-  args = parser.parse_args()
-
-  return args
-
-args = parse()
+args = parser.parse_args()
 net = get_network(args)
 
 
@@ -51,11 +46,11 @@ wandb.init(
 
 #Data_loader
 if args.data == 'CIFAR10':
-  train_loader = CIFAR10_train_loader
-  test_loader = CIFAR10_test_loader
+  train_loader = CIFAR10_train_loader(args)
+  test_loader = CIFAR10_test_loader(args)
 elif args.data == 'CIFAR100':
-  train_loader = CIFAR100_train_loader
-  test_loader = CIFAR100_test_loader
+  train_loader = CIFAR100_train_loader(args)
+  test_loader = CIFAR100_test_loader(args)
 
 
 loss_function = nn.CrossEntropyLoss()
