@@ -1,5 +1,12 @@
 # Pytorch Models Zoo
-Image Models implements for experiments using pytorch(only Classification....)
+Image Models implements for experiments using pytorch and wandb(only Classification....)
+
+## Requirements
+- Python3
+- PyTorch (> 0.4.1)
+- torchvision
+- numpy
+- wandb
 
 ### Training
 Run ```train.py```
