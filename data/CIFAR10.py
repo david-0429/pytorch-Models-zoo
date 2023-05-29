@@ -8,10 +8,11 @@ import torch.backends.cudnn as cudnn
 import torchvision
 import torchvision.transforms as transforms
 
-import utils
-import conf
+from utils import transform_train, transform_test
+from conf import CIFAR10_TRAIN_MEAN, CIFAR10_TRAIN_STD
 
 data_path = '/content/data/CIFAR10'
+parser = argparse.ArgumentParser()
 args = parser.parse_args()
 
 transform_train = transform_train(CIFAR10_TRAIN_MEAN , CIFAR10_TRAIN_STD, args = args.DA)
