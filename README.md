@@ -49,3 +49,7 @@ where the flags are explained as:
 ### 4. Other tricks
 
 #### Data Augmentation
+ - `non` : no data augmentation
+ - `flip_crop` : RandomCrop + RandomHorizontalFlip
+ - `flip_crop_AA` : RandomCrop + RandomHorizontalFlip + AutoAugment
+ - `flip_crop_RA` : RandomCrop + RandomHorizontalFlip + RandAugment(n=2, m=14)
