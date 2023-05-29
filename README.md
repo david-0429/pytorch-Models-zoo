@@ -15,10 +15,12 @@ Run ```train.py```
 -DA_test non
 ```
 where the flags are explained as:
-    - `--path_t`: specify the path of the teacher model
-    - `--model_s`: specify the student model, see 'models/\_\_init\_\_.py' to check the available model types.
-    - `--distill`: specify the distillation method
-    - `-r`: the weight of the cross-entropy loss between logit and ground truth, default: `1`
-    - `-a`: the weight of the KD loss, default: `None`
-    - `-b`: the weight of other distillation losses, default: `None`
-    - `--trial`: specify the experimental id to differentiate between multiple runs.
+    - `-data`: specify the datasets of model, default: 'CIFAR100'
+    - `-name`: specify the experiment name of wandb
+    - `-net`: specify the classifier model network, default: 'resnet50'
+    - `-epochs`: specify the number of total epochs to run, default:'200'
+    - `-batch_size`: specify the mini-batch size, default: '256'
+    - `-lr`: specify the initial learning rate, default: '0.01'
+    - `-DA`: specify the Data Augmentation in training time, default: 'flip_crop'
+    - `-DA_test`: specify the Data Augmentation in testing time, default: 'non'
+    
