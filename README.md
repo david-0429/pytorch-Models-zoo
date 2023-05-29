@@ -2,7 +2,7 @@
 Computer Vision models implements for experiments using pytorch
 
 ### Training
-Run ```train.py``` with setting ```data```, ```net```
+Run ```train.py```
 ```
 !python train.py \
 -data CIFAR100 \
