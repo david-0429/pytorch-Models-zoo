@@ -18,13 +18,13 @@ args = parser.parse_args()
 transform_train = transform_train(CIFAR100_TRAIN_MEAN , CIFAR100_TRAIN_STD, args.DA)
 transform_test = transform_test(CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD, args.DA_test)
 
-def train_loader():
+def CIFAR100_train_loader():
   trainset = torchvision.datasets.CIFAR100(root=data_path, train=True, download=True, transform=transform_train)
   train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=4)
   
   return train_loader
 
-def test_loader():
+def CIFAR100_test_loader():
   testset = torchvision.datasets.CIFAR100(root=data_path, train=False, download=True, transform=transform_test)
   test_loader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=4)
   
