@@ -11,8 +11,8 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 
-from utils import train_loader
-from utils import test_loader
+import data
+import utils
 
 parser = argparse.ArgumentParser(description='CIFAR-100 training')
 parser.add_argument('-data', type=str, default='../data')
