@@ -27,7 +27,7 @@ parser.add_argument('-lr', default=0.01, type=float, help='initial learning rate
 #parser.add_argument('-warm', type=int, default=1, help='warm up training phase')
 parser.add_argument('-DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
 parser.add_argument('-DA_test', default='non', type=str)
-#parser.add_argument('-gpu', action='store_true', type=bool, default=False, help='use gpu or not')
+parser.add_argument('-gpu', action='store_true', default=False, help='use gpu or not')
 
 args = parser.parse_args()
 net = get_network(args)
@@ -76,8 +76,9 @@ def train(net, epoch):
     
     for batch_index, (images, labels) in enumerate(train_loader):
 
-        labels = labels.cuda()
-        images = images.cuda()
+        if args.gpu:
+            labels = labels.cuda()
+            images = images.cuda()
 
         optimizer.zero_grad()
         outputs = net(images)
@@ -115,7 +116,8 @@ def test(net):
     
     for batch_idx, (images, targets) in enumerate(test_loader):
         
-        images, targets = images.cuda(), targets.cuda()
+        if args.gpu:
+            images, targets = images.cuda(), targets.cuda()
             
         outputs = net(images)
         loss = loss_function(outputs, targets)
