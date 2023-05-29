@@ -3,6 +3,7 @@ import sys
 import argparse
 import time
 from datetime import datetime
+import wandb
 
 import numpy as np
 import torch
@@ -11,8 +12,10 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 
-import data
-import utils
+from data.CIFAR10 import train_loader, test_loader
+from data.CIFAR100 import train_loader, test_loader
+
+from utils import get_network
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-data', type=str, default='../data')
@@ -23,10 +26,11 @@ parser.add_argument('-batch_size', default=128, type=int, help='mini-batch size 
 parser.add_argument('-lr', default=0.1, type=float, help='initial learning rate')
 parser.add_argument('-warm', type=int, default=1, help='warm up training phase')
 parser.add_argument('-DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
+parser.add_argument('-DA_test', default='non', type=str)
 parser.add_argument('-gpu', action='store_true', default=False, help='use gpu or not')
 
-net = get_network(args)
 args = parser.parse_args()
+net = get_network(args)
 
 
 #wandb init
@@ -75,10 +79,10 @@ def train(net, epoch):
         
         train_loss += loss.item()
         _, predicted = torch.max(outputs.data, 1)
-        total += targets.size(0)
-        correct += predicted.eq(targets.data).cpu().sum().float().item()
+        total += labels.size(0)
+        correct += predicted.eq(labels.data).cpu().sum().float().item()
         
-        b_idx = batch_idx
+        b_idx = batch_index
         
         '''
         other tricks : warmup
@@ -102,7 +106,7 @@ def test(net):
     total = 0
     
     for batch_idx, (images, targets) in enumerate(test_loader):
-        if arg.gpu:
+        if args.gpu:
             images, targets = images.cuda(), targets.cuda()
             
         outputs = net(images)
