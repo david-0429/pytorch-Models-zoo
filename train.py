@@ -12,18 +12,18 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 
-from data.CIFAR10 import train_loader, test_loader
-from data.CIFAR100 import train_loader, test_loader
+from data.CIFAR10 import CIFAR10_train_loader, CIFAR10_test_loader
+from data.CIFAR100 import CIFAR100_train_loader, CIFAR100_test_loader
 
 from utils import get_network
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-data', type=str, default='../data')
+parser.add_argument('-data', type=str, choices=['CIFAR10', 'CIFAR100'])
 parser.add_argument('-name', type=str)
 parser.add_argument('-net', type=str, required=True, help='net type')
 parser.add_argument('-epochs', default=200, type=int, help='number of total epochs to run')
 parser.add_argument('-batch_size', default=128, type=int, help='mini-batch size (default: 256)')
-parser.add_argument('-lr', default=0.1, type=float, help='initial learning rate')
+parser.add_argument('-lr', default=0.01, type=float, help='initial learning rate')
 parser.add_argument('-warm', type=int, default=1, help='warm up training phase')
 parser.add_argument('-DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
 parser.add_argument('-DA_test', default='non', type=str)
@@ -42,6 +42,15 @@ wandb.init(
     project="pytorch models zoo", 
     name=f"experiment_{args.name}-{get_timestamp()}"
 )
+
+
+#Data_loader
+if args.data == 'CIFAR10':
+  train_loader = CIFAR10_train_loader
+  test_loader = CIFAR10_test_loader
+elif args.data == 'CIFAR100':
+  train_loader = CIFAR100_train_loader
+  test_loader = CIFAR100_test_loader
 
 
 loss_function = nn.CrossEntropyLoss()
