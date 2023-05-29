@@ -21,6 +21,8 @@ parser.add_argument('-net', type=str, required=True, help='net type')
 parser.add_argument('-epochs', default=200, type=int, help='number of total epochs to run')
 parser.add_argument('-batch_size', default=128, type=int, help='mini-batch size (default: 256)')
 parser.add_argument('-lr', default=0.1, type=float, help='initial learning rate')
+parser.add_argument('-warm', type=int, default=1, help='warm up training phase')
+parser.add_argument('-DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
 
 net = get_network(args)
 args = parser.parse_args()
@@ -35,7 +37,17 @@ wandb.init(
     project="pytorch models zoo", 
     name=f"experiment_{args.name}-{get_timestamp()}"
 )
-    
+
+
+loss_function = nn.CrossEntropyLoss()
+optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
+
+#other tricks
+'''
+train_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=settings.MILESTONES, gamma=0.2) #learning rate decay
+iter_per_epoch = len(train_loader)
+warmup_scheduler = WarmUpLR(optimizer, iter_per_epoch * args.warm)
+'''
     
 #train    
 def train(net, epoch):
@@ -66,6 +78,13 @@ def train(net, epoch):
         correct += predicted.eq(targets.data).cpu().sum().float().item()
         
         b_idx = batch_idx
+        
+        '''
+        other tricks : warmup
+        
+        if epoch <= args.warm:
+            warmup_scheduler.step()
+        '''
 
     print('Train \t Time Taken: %.2f sec' % (time.time() - epoch_start_time))
     print('Loss: %.3f | Acc: %.3f%% (%d/%d)' % (train_loss / (b_idx + 1), 100. * correct / total, correct, total))
@@ -86,7 +105,7 @@ def test(net):
             images, targets = images.cuda(), targets.cuda()
             
         outputs = net(images)
-        loss = criterion_CE(outputs, targets)
+        loss = loss_function(outputs, targets)
 
         test_loss += loss.item()
         _, predicted = torch.max(outputs.data, 1)
@@ -102,6 +121,13 @@ def test(net):
 
 for epoch in range(args.epochs):
 
+    '''
+    other tricks : lr rate decay 
+    
+    if epoch > args.warm:
+       train_scheduler.step(epoch)
+    '''
+    
     train_loss, train_accuracy = train(net, epoch)
     test_loss, test_accuracy = test(net)
     
