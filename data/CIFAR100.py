@@ -10,10 +10,10 @@ import torchvision.transforms as transforms
 
 from utils import transform_train, transform_test
 from conf import CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD
+from train import parse
 
 data_path = '/content/data/CIFAR100'
-parser = argparse.ArgumentParser()
-args = parser.parse_args()
+args = parse()
 
 transform_train = transform_train(CIFAR100_TRAIN_MEAN , CIFAR100_TRAIN_STD, args.DA)
 transform_test = transform_test(CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD, args.DA_test)
