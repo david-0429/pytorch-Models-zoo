@@ -1,8 +1,9 @@
 # models-zoo
 Computer vision models implements for experiments
 
-useage
-
+### Training
+Run ```CIFAR-100/train_with_distillation.py``` with setting alphabet (a - f)
+```
 !python train.py \
 -data CIFAR100 \
 -name resnet \
@@ -12,3 +13,4 @@ useage
 -lr 0.01 \
 -DA flip_crop \
 -DA_test non
+```
