@@ -46,7 +46,7 @@ def transform_train(mean, std):
     return train_transform
   
   
-def transform_test():
+def transform_test(mean, std):
     transform_test = transforms.Compose([
       transforms.ToTensor(),
       transforms.Normalize(mean, std)
@@ -56,7 +56,7 @@ def transform_test():
   
 #-------------------------------------------------------------------------------------------------------#
 
-def compute_mean_std(cifar_dataset):
+def CIFAR_mean_std(cifar_dataset):
     """compute the mean and std of cifar100 dataset
     Args:
         cifar100_training_dataset or cifar100_test_dataset
