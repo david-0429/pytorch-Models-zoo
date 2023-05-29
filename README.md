@@ -42,7 +42,7 @@ where the flags are explained as:
  - `-epochs`: specify the number of total epochs to run, default:'200'
  - `-batch_size`: specify the mini-batch size, default: '256'
  - `-lr`: specify the initial learning rate, default: '0.01'
- - `-DA`: specify the Data Augmentation in training time, default: 'flip_crop', choices='['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA']'
+ - `-DA`: specify the Data Augmentation in training time, default: 'flip_crop'
  - `-DA_test`: specify the Data Augmentation in testing time, default: 'non'
  - `gpu` : use gpu or not, default: 'False'
     
