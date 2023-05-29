@@ -45,25 +45,25 @@ where the flags are explained as:
  - `-DA`: specify the Data Augmentation in training time, default: 'flip_crop'
  - `-DA_test`: specify the Data Augmentation in testing time, default: 'non'
  - `gpu` : use gpu or not, default: 'False'
- - 
+ 
 #### Models
 `resnet18`
 `resnet34`
 `resnet50`
 `resnet101`
 `resnet152`
-`mobilenet`
+-`mobilenet`
 `mobilenetv2`
-`shufflenet`
-`shufflenetv2`
-`vgg11`
+-`shufflenet`
+-`shufflenetv2`
+-`vgg11`
 `vgg13`
 `vgg16`
 `vgg19`
-`densenet121`
+-`densenet121`
 `densenet161`
 `densenet201`
-`googlenet`
+-`googlenet`
 `inceptionv3`
 `inceptionv4`
 `inceptionresnetv2`
