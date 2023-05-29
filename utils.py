@@ -157,7 +157,10 @@ def get_network(args):
 
     return net
 
-def transform_train(mean, std, args):
+def transform_train(mean, std):
+    from train import parse_option
+    args = parse_option()
+
     if args.DA == "non":
         train_transform = transforms.Compose([
             transforms.ToTensor(),
@@ -195,7 +198,10 @@ def transform_train(mean, std, args):
     return train_transform
   
   
-def transform_test(mean, std, args):
+def transform_test(mean, std):
+    from train import parse_option
+    args = parse_option()
+
     if args.DA_test == 'non':
         transform_test = transforms.Compose([
         transforms.ToTensor(),
