@@ -12,6 +12,10 @@ import utils
 
 data_path = '/content/data/CIFAR10'
 
+mean, std = CIFAR_mean_std
+transform_train = transform_train(mean, std)
+transform_test = transform_test(mean, std)
+
 def train_loader():
   trainset = torchvision.datasets.CIFAR10(root=data_path, train=True, download=True, transform=transform_train)
   train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=4)
