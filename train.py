@@ -23,6 +23,7 @@ parser.add_argument('-batch_size', default=128, type=int, help='mini-batch size 
 parser.add_argument('-lr', default=0.1, type=float, help='initial learning rate')
 parser.add_argument('-warm', type=int, default=1, help='warm up training phase')
 parser.add_argument('-DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
+parser.add_argument('-gpu', action='store_true', default=False, help='use gpu or not')
 
 net = get_network(args)
 args = parser.parse_args()
