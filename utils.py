@@ -9,6 +9,9 @@ import torchvision.transforms as transforms
 
 import models
 
+args = parser.parse_args()
+
+
 def get_network():
 
 def transform_train(mean, std, agrs):
