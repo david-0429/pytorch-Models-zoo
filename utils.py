@@ -10,9 +10,6 @@ import torchvision
 import torchvision.transforms as transforms
 
 
-parser = argparse.ArgumentParser()
-args = parser.parse_args()
-
 
 def get_network(args):
     """ return given network
@@ -161,13 +158,13 @@ def get_network(args):
     return net
 
 def transform_train(mean, std, agrs):
-    if args.DA == "non":
+    if agrs.DA == "non":
         train_transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(mean, std)
         ])
 
-    elif args.DA == "flip_crop":
+    elif agrs.DA == "flip_crop":
         train_transform = transforms.Compose([
             transforms.RandomCrop(32, padding=4),
             transforms.RandomHorizontalFlip(),
@@ -175,7 +172,7 @@ def transform_train(mean, std, agrs):
             transforms.Normalize(mean, std)
         ])
 
-    elif args.DA == "flip_crop_AA":
+    elif agrs.DA == "flip_crop_AA":
         train_transform = transforms.Compose([
             transforms.RandomCrop(32, padding=4),
             transforms.RandomHorizontalFlip(),
@@ -186,7 +183,7 @@ def transform_train(mean, std, agrs):
 
 #RandAugment : N = {1, 2} and M = {2, 6, 10, 14}  
 #best {N, M} in WideResNet-28-2 and Wide-ResNet-28-10 : {1,2}, {2, 14}     Can more strong M??       
-    elif args.DA == "flip_crop_RA":
+    elif agrs.DA == "flip_crop_RA":
         train_transform = transforms.Compose([
             transforms.RandomCrop(32, padding=4),
             transforms.RandomHorizontalFlip(),
