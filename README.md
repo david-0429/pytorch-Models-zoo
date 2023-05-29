@@ -46,7 +46,7 @@ where the flags are explained as:
  - `-DA_test`: specify the Data Augmentation in testing time, default: 'non'
  - `gpu` : use gpu or not, default: 'False'
  - 
-####Models
+#### Models
 `resnet18`
 `resnet34`
 `resnet50`
