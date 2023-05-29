@@ -52,11 +52,12 @@ def transform_train(mean, std, agrs):
     return train_transform
   
   
-def transform_test(mean, std):
-    transform_test = transforms.Compose([
-      transforms.ToTensor(),
-      transforms.Normalize(mean, std)
-    ])
+def transform_test(mean, std, agrs):
+    if agrs.DA_test == 'non':
+        transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean, std)
+        ])
     
     return transform_test
   
