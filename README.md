@@ -45,4 +45,7 @@ where the flags are explained as:
  - `-DA`: specify the Data Augmentation in training time, default: 'flip_crop'
  - `-DA_test`: specify the Data Augmentation in testing time, default: 'non'
  - `gpu` : use gpu or not, default: 'False'
-    
+
+### 4. Other tricks
+
+#### Data Augmentation
