@@ -1,4 +1,4 @@
-# Pytorch-Models-Zoo
+# Pytorch Models Zoo
 Image Models implements for experiments using pytorch(only Classification....)
 
 ### Training
