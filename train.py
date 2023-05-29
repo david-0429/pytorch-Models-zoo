@@ -11,6 +11,9 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 
+from utils import train_loader
+from utils import test_loader
+
 parser = argparse.ArgumentParser(description='CIFAR-100 training')
 parser.add_argument('-data', type=str, default='../data')
 parser.add_argument('-name', type=str)
@@ -32,24 +35,6 @@ wandb.init(
     project="pytorch models zoo", 
     name=f"experiment_{args.name}-{get_timestamp()}"
 )
-
-
-#data loader
-    cifar100_training_loader = get_training_dataloader(
-        settings.CIFAR100_TRAIN_MEAN,
-        settings.CIFAR100_TRAIN_STD,
-        num_workers=4,
-        batch_size=args.b,
-        shuffle=True
-    )
-
-    cifar100_test_loader = get_test_dataloader(
-        settings.CIFAR100_TRAIN_MEAN,
-        settings.CIFAR100_TRAIN_STD,
-        num_workers=4,
-        batch_size=args.b,
-        shuffle=True
-    )
     
     
 #train    
@@ -63,7 +48,7 @@ def train(net, epoch):
     correct = 0
     total = 0
     
-    for batch_index, (images, labels) in enumerate(cifar100_training_loader):
+    for batch_index, (images, labels) in enumerate(train_loader):
 
         if args.gpu:
             labels = labels.cuda()
@@ -96,7 +81,7 @@ def test(net):
     correct = 0
     total = 0
     
-    for batch_idx, (images, targets) in enumerate(testloader):
+    for batch_idx, (images, targets) in enumerate(test_loader):
         if arg.gpu:
             images, targets = images.cuda(), targets.cuda()
             
