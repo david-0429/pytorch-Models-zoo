@@ -8,14 +8,15 @@ import torch.backends.cudnn as cudnn
 import torchvision
 import torchvision.transforms as transforms
 
-import utils
-import conf
+from utils import transform_train, transform_test
+from conf import CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD
 
 data_path = '/content/data/CIFAR100'
+parser = argparse.ArgumentParser()
 args = parser.parse_args()
 
 transform_train = transform_train(CIFAR100_TRAIN_MEAN , CIFAR100_TRAIN_STD, args.DA)
-transform_test = transform_test(CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD, agrs.DA_test)
+transform_test = transform_test(CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD, args.DA_test)
 
 def train_loader():
   trainset = torchvision.datasets.CIFAR100(root=data_path, train=True, download=True, transform=transform_train)
