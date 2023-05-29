@@ -7,8 +7,11 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
+import models
 
-def transform_train(mean, std):
+def get_network():
+
+def transform_train(mean, std, agrs):
     if args.DA == "non":
         train_transform = transforms.Compose([
             transforms.ToTensor(),
