@@ -32,7 +32,8 @@ Run ```train.py```
 -batch_size 256 \
 -lr 0.01 \
 -DA flip_crop \
--DA_test non
+-DA_test non |
+-gpu
 ```
 where the flags are explained as:
  - `-data`: specify the datasets of model, default: 'CIFAR100'
@@ -43,4 +44,5 @@ where the flags are explained as:
  - `-lr`: specify the initial learning rate, default: '0.01'
  - `-DA`: specify the Data Augmentation in training time, default: 'flip_crop'
  - `-DA_test`: specify the Data Augmentation in testing time, default: 'non'
+ - 'gpu' : use gpu or not, default: 'False'
     
