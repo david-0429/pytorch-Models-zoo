@@ -1,8 +1,8 @@
 # models-zoo
-Computer vision models implements for experiments
+Computer Vision models implements for experiments using pytorch
 
 ### Training
-Run ```CIFAR-100/train_with_distillation.py``` with setting alphabet (a - f)
+Run ```train.py``` with setting ```data```, ```net```
 ```
 !python train.py \
 -data CIFAR100 \
