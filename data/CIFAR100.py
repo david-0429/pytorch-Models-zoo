@@ -15,7 +15,7 @@ data_path = '/content/data/CIFAR100'
 args = parser.parse_args()
 
 transform_train = transform_train(CIFAR100_TRAIN_MEAN , CIFAR100_TRAIN_STD, args.DA)
-transform_test = transform_test(CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD, agrs.DA)
+transform_test = transform_test(CIFAR100_TRAIN_MEAN, CIFAR100_TRAIN_STD, agrs.DA_test)
 
 def train_loader():
   trainset = torchvision.datasets.CIFAR100(root=data_path, train=True, download=True, transform=transform_train)
