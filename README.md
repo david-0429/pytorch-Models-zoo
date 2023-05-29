@@ -14,7 +14,7 @@ Run ```train.py```
 -DA flip_crop \
 -DA_test non
 ```
-where the flags are explained as:
+where the flags are explained as:|
     - `-data`: specify the datasets of model, default: 'CIFAR100'
     - `-name`: specify the experiment name of wandb
     - `-net`: specify the classifier model network, default: 'resnet50'
