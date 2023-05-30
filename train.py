@@ -23,6 +23,7 @@ def parse_option():
   parser.add_argument('--data', default='CIFAR100', type=str, choices=['CIFAR10', 'CIFAR100'])
   parser.add_argument('--name', type=str)
   parser.add_argument('--net', type=str, default='resnet50', help='net type')
+  parser.add_argument('--pretrain', action='store_true', default=False, help='use pretrained model or not')
   parser.add_argument('--epochs', default=200, type=int, help='number of total epochs to run')
   parser.add_argument('--batch_size', default=128, type=int, help='mini-batch size (default: 256)')
   parser.add_argument('--lr', default=0.001, type=float, help='initial learning rate')
