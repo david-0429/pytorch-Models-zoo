@@ -10,6 +10,15 @@ import torchvision
 import torchvision.transforms as transforms
 
 
+def adjust_learning_rate(epoch, opt, optimizer):
+    """Sets the learning rate to the initial LR decayed by decay rate every steep step"""
+    steps = np.sum(epoch > np.asarray(opt.lr_decay_epochs))
+    if steps > 0:
+        new_lr = opt.learning_rate * (opt.lr_decay_rate ** steps)
+        for param_group in optimizer.param_groups:
+            param_group['lr'] = new_lr
+            
+#-------------------------------------------------------------------------------------------------------
 
 def get_network(args, class_num=100, pretrain=False):
     """ return given network
@@ -18,7 +27,7 @@ def get_network(args, class_num=100, pretrain=False):
         from models.timm_model import timm_resnet50
         net = timm_resnet50(class_num, pretrain)
         
- #---------------------------------------------------------------------------------------
+ #---------------------------------timm model------------------------------------------------
 
     elif args.net == 'vgg16':
         from models.vgg import vgg16_bn
@@ -215,7 +224,7 @@ def transform_test(mean, std):
     
     return transform_test
   
-#-------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------
 
 def CIFAR_mean_std(cifar_dataset):
     """compute the mean and std of cifar100 dataset
