@@ -30,14 +30,11 @@ Run ```train.py```
 ```
 !python train.py \
 --data CIFAR100 \
---name resnet \
 --net resnet50 \
 --pretrain \
---epochs 30 \
 --batch_size 256 \
 --lr 0.01 \
 --DA flip_crop \
---DA_test non \
 --gpu
 ```
 where the flags are explained as:
@@ -45,9 +42,13 @@ where the flags are explained as:
  - `--name`: specify the experiment name of wandb
  - `--net`: specify the classifier model network, default: 'resnet50'
  - `--pretrain`: use pretrained model or not. only for timm models, default: 'False'
+ 
  - `--epochs`: specify the number of total epochs to run, default:'200'
  - `--batch_size`: specify the mini-batch size, default: '128'
  - `--lr`: specify the initial learning rate, default: '0.001'
+ - `--lr_decay_epochs`: where to decay lr, can be a list, default: '150,180,210'
+ - `--lr_decay_rate`: specify the decay rate for learning rate, default: '0.1'
+  
  - `--DA`: specify the Data Augmentation in training time, default: 'flip_crop'
  - `--DA_test`: specify the Data Augmentation in testing time, default: 'non'
  - `--gpu` : use gpu or not, default: 'False'
