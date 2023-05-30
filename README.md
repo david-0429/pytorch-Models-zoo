@@ -15,10 +15,14 @@ Image Models implements for experiments using pytorch and wandb(only Classificat
 $ cd pytorch-Models-zoo
 ```
 
-### 2. Run wandb
+### 2. Run wandb & timm
 Install wandb
 ```bash
 $ pip install wandb
+```
+Install timm
+```bash
+$ pip install timm
 ```
 
 ### 3. Training
@@ -28,6 +32,7 @@ Run ```train.py```
 --data CIFAR100 \
 --name resnet \
 --net resnet50 \
+--pretrain \
 --epochs 30 \
 --batch_size 256 \
 --lr 0.01 \
@@ -39,14 +44,16 @@ where the flags are explained as:
  - `--data`: specify the datasets of model, default: 'CIFAR100'
  - `--name`: specify the experiment name of wandb
  - `--net`: specify the classifier model network, default: 'resnet50'
+ - `--pretrain`: use pretrained model or not. only for timm models, default: 'False'
  - `--epochs`: specify the number of total epochs to run, default:'200'
- - `--batch_size`: specify the mini-batch size, default: '256'
- - `--lr`: specify the initial learning rate, default: '0.01'
+ - `--batch_size`: specify the mini-batch size, default: '128'
+ - `--lr`: specify the initial learning rate, default: '0.001'
  - `--DA`: specify the Data Augmentation in training time, default: 'flip_crop'
  - `--DA_test`: specify the Data Augmentation in testing time, default: 'non'
  - `--gpu` : use gpu or not, default: 'False'
  
 #### Models
+Implement by custom
 `resnet18`
 `resnet34`
 `resnet50`
@@ -73,6 +80,10 @@ where the flags are explained as:
 `resnext152`
 `nasnet`
 `wideresnet`
+
+#### timm Models
+Implement by timm
+`resnet50`
 
 ### 4. Other tricks
 
