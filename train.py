@@ -45,7 +45,7 @@ def get_timestamp():
 wandb.init(
     # Set the project where this run will be logged
     project="pytorch models zoo", 
-    name=f"experiment_{args.name}-{get_timestamp()}"
+    name=f"{args.net}_{args.DA}_{args.batch_size}-{get_timestamp()}"
 )
 
 
@@ -72,7 +72,7 @@ warmup_scheduler = WarmUpLR(optimizer, iter_per_epoch * args.warm)
 def train(net, epoch):
 
     epoch_start_time = time.time()
-    print('\epoch: %d' % epoch)
+    print('epoch: %d' % epoch)
     net.train()
     
     train_loss = 0
@@ -148,6 +148,8 @@ for epoch in range(args.epochs):
     
     train_loss, train_accuracy = train(net, epoch)
     test_loss, test_accuracy = test(net)
+    
+    print("-------------------------------------------------------------------------")
     
     wandb.log({"epoch/val_acc": test_accuracy, "epoch/val_loss": test_loss, "epoch/train_acc": train_accuracy, "epoch/trn_loss": train_loss, "epoch": epoch})
 
