@@ -28,7 +28,7 @@ def parse_option():
   parser.add_argument('--epochs', default=200, type=int, help='number of total epochs to run')
   parser.add_argument('--batch_size', default=128, type=int, help='mini-batch size (default: 256)')
   parser.add_argument('--lr', default=0.001, type=float, help='initial learning rate')
-  parser.add_argument('--lr_decay_epochs', type=str, default='150,180,210', help='where to decay lr, can be a list')
+  parser.add_argument('--lr_decay_epochs', type=str, default='100,150,180', help='where to decay lr, can be a list')
   parser.add_argument('--lr_decay_rate', type=float, default=0.1, help='decay rate for learning rate')
   #parser.add_argument('--warm', type=int, default=1, help='warm up training phase')
   
