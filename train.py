@@ -62,7 +62,7 @@ if args.pretrain:
     project=f"{args.data} models zoo", 
     name=f"pretrain_{args.net}_{args.DA}_{args.batch_size}-{get_timestamp()}"
 )
- else:
+else:
   wandb.init(
     # Set the project where this run will be logged
     project=f"{args.data} models zoo", 
