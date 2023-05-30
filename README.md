@@ -25,15 +25,15 @@ $ pip install wandb
 Run ```train.py```
 ```
 !python train.py \
--data CIFAR100 \
--name resnet \
--net resnet50 \
--epochs 30 \
--batch_size 256 \
--lr 0.01 \
--DA flip_crop \
--DA_test non \
--gpu
+--data CIFAR100 \
+--name resnet \
+--net resnet50 \
+--epochs 30 \
+--batch_size 256 \
+--lr 0.01 \
+--DA flip_crop \
+--DA_test non \
+--gpu
 ```
 where the flags are explained as:
  - `--data`: specify the datasets of model, default: 'CIFAR100'
