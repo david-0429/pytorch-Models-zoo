@@ -55,10 +55,18 @@ elif args.data =='CIFAR100':
 print("wandb init")
 def get_timestamp():
     return datetime.now().strftime("%b%d_%H-%M-%S")
-wandb.init(
+  
+if args.pretrain:
+  wandb.init(
     # Set the project where this run will be logged
-    project="pytorch models zoo", 
-    name=f"{args.net}_{args.DA}_{args.batch_size}-{get_timestamp()}"
+    project=f"{args.data} models zoo", 
+    name=f"pretrain_{args.net}_{args.DA}_{args.batch_size}-{get_timestamp()}"
+)
+ else:
+  wandb.init(
+    # Set the project where this run will be logged
+    project=f"{args.data} models zoo", 
+    name=f"pretrain_{args.net}_{args.DA}_{args.batch_size}-{get_timestamp()}"
 )
 
 
