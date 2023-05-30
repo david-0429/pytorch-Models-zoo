@@ -11,7 +11,7 @@ import torchvision.transforms as transforms
 
 
 
-def get_network(args, class_num, pretrain):
+def get_network(args, class_num=100, pretrain=False):
     """ return given network
     """
     if args.net =='timm_resnet50':
