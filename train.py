@@ -41,14 +41,14 @@ args = parse_option()
 
 if args.data =='CIFAR10':
   if args.pretrain:
-    net = get_network(args, CIFAR10_CLASS_NUM, pretrain=True)
+    net = get_network(args, class_num=CIFAR10_CLASS_NUM, pretrain=True)
   else:
-    net = get_network(args, CIFAR10_CLASS_NUM, pretrain=False)
+    net = get_network(args, class_num=CIFAR10_CLASS_NUM, pretrain=False)
 elif args.data =='CIFAR100':
   if args.pretrain:
-    net = get_network(args, CIFAR100_CLASS_NUM, pretrain=True)
+    net = get_network(args, class_num=CIFAR100_CLASS_NUM, pretrain=True)
   else:
-    net = get_network(args, CIFAR100_CLASS_NUM, pretrain=False)
+    net = get_network(args, class_num=CIFAR100_CLASS_NUM, pretrain=False)
 
 
 #wandb init
