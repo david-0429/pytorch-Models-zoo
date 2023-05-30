@@ -135,7 +135,7 @@ def test(net):
         
         b_idx = batch_idx
 
-        wandb.log({"epoch/val_acc": correct / total * 100, "epoch/val_loss": test_loss / (b_idx + 1)})
+        wandb.log({"epoch/val_acc": correct / total * 100, "epoch/val_loss": test_loss / (b_idx + 1), "epoch": epoch})
 
 
     print('Test \t Time Taken: %.2f sec' % (time.time() - epoch_start_time))
