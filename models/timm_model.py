@@ -2,6 +2,6 @@ import timm
 import torch
 
 
-def timm_resnet50(pretrain=False, num_classes=100):
-  model = timm.create_model('resnet50', pretrained=pretrain, num_classes=num_classes)
+def timm_resnet50(class_num, pretrain=False):
+  model = timm.create_model('resnet50', pretrained=pretrain, num_classes=class_num)
   return model
