@@ -60,13 +60,13 @@ if args.pretrain:
   wandb.init(
     # Set the project where this run will be logged
     project=f"{args.data} models zoo", 
-    name=f"pretrain_{args.net}_{args.DA}_{args.batch_size}-{get_timestamp()}"
+    name=f"pretrain_{args.net}_{args.DA}_{args.batch_size}_{args.lr}-{get_timestamp()}"
 )
 else:
   wandb.init(
     # Set the project where this run will be logged
     project=f"{args.data} models zoo", 
-    name=f"pretrain_{args.net}_{args.DA}_{args.batch_size}-{get_timestamp()}"
+    name=f"pretrain_{args.net}_{args.DA}_{args.batch_size}_{args.lr}-{get_timestamp()}"
 )
 
 
