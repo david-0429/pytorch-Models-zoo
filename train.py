@@ -104,10 +104,13 @@ def train(net, epoch):
             warmup_scheduler.step()
         '''
 
+        wandb.log({"epoch/train_acc": correct / total * 100, "epoch/trn_loss": train_loss / (b_idx + 1), "epoch": epoch})
+
+
     print('Train \t Time Taken: %.2f sec' % (time.time() - epoch_start_time))
     print('Loss: %.3f | Acc: %.3f%% (%d/%d)' % (train_loss / (b_idx + 1), 100. * correct / total, correct, total))
 
-    return train_loss / (b_idx + 1), correct / total
+    return train_loss / (b_idx + 1), correct / total * 100
 
 
 #test
@@ -132,9 +135,12 @@ def test(net):
         
         b_idx = batch_idx
 
+        wandb.log({"epoch/val_acc": correct / total * 100, "epoch/val_loss": test_loss / (b_idx + 1)})
+
+
     print('Test \t Time Taken: %.2f sec' % (time.time() - epoch_start_time))
     print('Loss: %.3f | Acc: %.3f%% (%d/%d)' % (test_loss / (b_idx + 1), 100. * correct / total, correct, total))
-    return test_loss / (b_idx + 1), correct / total
+    return test_loss / (b_idx + 1), correct / total * 100
 
 
 for epoch in range(args.epochs):
@@ -151,7 +157,7 @@ for epoch in range(args.epochs):
     
     print("-------------------------------------------------------------------------")
     
-    wandb.log({"epoch/val_acc": test_accuracy, "epoch/val_loss": test_loss, "epoch/train_acc": train_accuracy, "epoch/trn_loss": train_loss, "epoch": epoch})
+    #wandb.log({"epoch/val_acc": test_accuracy, "epoch/val_loss": test_loss, "epoch/train_acc": train_accuracy, "epoch/trn_loss": train_loss, "epoch": epoch})
 
 wandb.finish()
     
