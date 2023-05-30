@@ -11,7 +11,7 @@ import torchvision.transforms as transforms
 
 
 
-def get_network(args):
+def get_network(args, class_num):
     """ return given network
     """
 
@@ -21,6 +21,9 @@ def get_network(args):
     elif args.net == 'vgg13':
         from models.vgg import vgg13_bn
         net = vgg13_bn()
+     elif args.net =='timm_resent50':
+        from models.timm_model import timm_resnet50
+        net = timm_resnet50(class_num)
     elif args.net == 'vgg11':
         from models.vgg import vgg11_bn
         net = vgg11_bn()
