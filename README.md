@@ -46,7 +46,7 @@ where the flags are explained as:
  - `--epochs`: specify the number of total epochs to run, default:'200'
  - `--batch_size`: specify the mini-batch size, default: '128'
  - `--lr`: specify the initial learning rate, default: '0.001'
- - `--lr_decay_epochs`: where to decay lr, can be a list, default: '150,180,210'
+ - `--lr_decay_epochs`: where to decay lr, can be a list, default: '100,150,180'
  - `--lr_decay_rate`: specify the decay rate for learning rate, default: '0.1'
   
  - `--DA`: specify the Data Augmentation in training time, default: 'flip_crop'
