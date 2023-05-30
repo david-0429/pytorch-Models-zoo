@@ -24,10 +24,14 @@ def parse_option():
   parser.add_argument('--name', type=str)
   parser.add_argument('--net', type=str, default='resnet50', help='net type')
   parser.add_argument('--pretrain', action='store_true', default=False, help='use pretrained model or not')
+  
   parser.add_argument('--epochs', default=200, type=int, help='number of total epochs to run')
   parser.add_argument('--batch_size', default=128, type=int, help='mini-batch size (default: 256)')
   parser.add_argument('--lr', default=0.001, type=float, help='initial learning rate')
+  parser.add_argument('--lr_decay_epochs', type=str, default='150,180,210', help='where to decay lr, can be a list')
+  parser.add_argument('--lr_decay_rate', type=float, default=0.1, help='decay rate for learning rate')
   #parser.add_argument('--warm', type=int, default=1, help='warm up training phase')
+  
   parser.add_argument('--DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
   parser.add_argument('--DA_test', default='non', type=str)
   parser.add_argument('--gpu', action='store_true', default=False, help='use gpu or not')
@@ -79,6 +83,11 @@ elif args.data == 'CIFAR100':
   test_loader = CIFAR100_test_loader(args)
 
 
+iterations = args.lr_decay_epochs.split(',')
+args.lr_decay_epochs = list([])
+for it in iterations:
+  args.lr_decay_epochs.append(int(it))
+  
 loss_function = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 
@@ -166,8 +175,10 @@ def test(net):
 
 for epoch in range(args.epochs):
 
+    adjust_learning_rate(epoch, args, optimizer)
+    
     '''
-    other tricks : lr rate decay 
+    other tricks
     
     if epoch > args.warm:
        train_scheduler.step(epoch)
