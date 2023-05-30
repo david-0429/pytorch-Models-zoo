@@ -38,9 +38,9 @@ def parse_option():
 args = parse_option()
 
 
-if arg.data =='CIFAR10':
+if args.data =='CIFAR10':
   net = get_network(args, CIFAR10_CLASS_NUM)
-elif arg.data =='CIFAR100':
+elif args.data =='CIFAR100':
   net = get_network(args, CIFAR100_CLASS_NUM)
 
 
