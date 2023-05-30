@@ -5,7 +5,7 @@ Image Models implements for experiments using pytorch and wandb(only Classificat
 - Python3
 - PyTorch (> 0.4.1)
 - torchvision
-- numpy
+- timm
 - wandb
 
 ## Image Classification
@@ -53,8 +53,8 @@ where the flags are explained as:
  - `--gpu` : use gpu or not, default: 'False'
  
 #### Models
-Implement by custom
-`resnet18`
+Implement by custom:
+ - `resnet18`
 `resnet34`
 `resnet50`
 `resnet101`
@@ -83,7 +83,7 @@ Implement by custom
 
 #### timm Models
 Implement by timm
-`resnet50`
+ - `resnet50`
 
 ### 4. Other tricks
 
