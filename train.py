@@ -16,7 +16,7 @@ from data.CIFAR10 import CIFAR10_train_loader, CIFAR10_test_loader
 from data.CIFAR100 import CIFAR100_train_loader, CIFAR100_test_loader
 
 from utils import get_network
-from conf import class_num
+from conf import CIFAR10_CLASS_NUM, CIFAR100_CLASS_NUM
 
 def parse_option():
   parser = argparse.ArgumentParser()
@@ -39,9 +39,9 @@ args = parse_option()
 
 
 if arg.data =='CIFAR10':
-  net = get_network(args, CIFAR10_class_num)
+  net = get_network(args, CIFAR10_CLASS_NUM)
 elif arg.data =='CIFAR100':
-  net = get_network(args, CIFAR100_class_num)
+  net = get_network(args, CIFAR100_CLASS_NUM)
 
 
 #wandb init
