@@ -53,7 +53,7 @@ where the flags are explained as:
  - `--gpu` : use gpu or not, default: 'False'
  
 #### Models
-Implement by custom:
+Implement by custom :
  - `resnet18`
 `resnet34`
 `resnet50`
@@ -82,7 +82,7 @@ Implement by custom:
 `wideresnet`
 
 #### timm Models
-Implement by timm
+Implement by timm :
  - `resnet50`
 
 ### 4. Other tricks
