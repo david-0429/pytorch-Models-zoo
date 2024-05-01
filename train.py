@@ -15,22 +15,8 @@ import torchvision.transforms as transforms
 from data.CIFAR10 import CIFAR10_loader
 from data.CIFAR100 import CIFAR100_loader
 
-#from model import get_network
+from model import get_network
 from conf import CIFAR10_CLASS_NUM, CIFAR100_CLASS_NUM
-
-import timm
-
-
-def get_network(args, class_num=10, pretrain=False):
-    """ return given network
-    """
-
-    model = timm.create_model(args.model, pretrained=pretrain, num_classes=class_num)
-
-    if args.gpu: #use_gpu
-        model = model.cuda()
-
-    return model
 
 
 def parse_option():
