@@ -18,6 +18,20 @@ from data.CIFAR100 import CIFAR100_loader
 #from model import get_network
 from conf import CIFAR10_CLASS_NUM, CIFAR100_CLASS_NUM
 
+import timm
+
+
+def get_network(args, class_num=10, pretrain=False):
+    """ return given network
+    """
+
+    model = timm.create_model(args.model, pretrained=pretrain, num_classes=class_num)
+
+    if args.gpu: #use_gpu
+        model = model.cuda()
+
+    return model
+
 
 def parse_option():
   parser = argparse.ArgumentParser()
@@ -107,18 +121,18 @@ def train(model, epoch):
         b_idx = batch_index
 
     print('Train \t Time Taken: %.2f sec' % (time.time() - epoch_start_time))
-    print('Loss: %.3f | Acc: %.3f%% (%d/%d)' % (train_loss / (b_idx + 1), 100. * correct / total, correct, total))
+    print('train_Loss: %.3f | train_Acc: %.3f%% (%d/%d)' % (train_loss / (b_idx + 1), 100. * correct / total, correct, total))
 
     wandb.log({"epoch/train_acc": correct / total * 100, "epoch/trn_loss": train_loss / (b_idx + 1), "epoch": epoch})
 
     return train_loss / (b_idx + 1), correct / total * 100
 
 
-#test
-def test(model):
+#val
+def validation(model):
     epoch_start_time = time.time()
     model.eval()
-    test_loss = 0
+    val_loss = 0
     correct = 0
     total = 0
     
@@ -129,25 +143,25 @@ def test(model):
         outputs = model(images)
         loss = loss_function(outputs, targets)
 
-        test_loss += loss.item()
+        val_loss += loss.item()
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum().float().item()
         
         b_idx = batch_idx
 
-    print('Test \t Time Taken: %.2f sec' % (time.time() - epoch_start_time))
-    print('Loss: %.3f | Acc: %.3f%% (%d/%d)' % (test_loss / (b_idx + 1), 100. * correct / total, correct, total))
+    print('Validation \t Time Taken: %.2f sec' % (time.time() - epoch_start_time))
+    print('validation_Loss: %.3f | validation_Acc: %.3f%% (%d/%d)' % (val_loss / (b_idx + 1), 100. * correct / total, correct, total))
     
-    wandb.log({"epoch/val_acc": correct / total * 100, "epoch/val_loss": test_loss / (b_idx + 1), "epoch": epoch})
+    wandb.log({"epoch/val_acc": correct / total * 100, "epoch/val_loss": val_loss / (b_idx + 1), "epoch": epoch})
 
-    return test_loss / (b_idx + 1), correct / total * 100
+    return val_loss / (b_idx + 1), correct / total * 100
 
 
 for epoch in range(args.epochs):
     
     train_loss, train_accuracy = train(model, epoch)
-    test_loss, test_accuracy = test(model)
+    test_loss, test_accuracy = validation(model)
     
     print("-------------------------------------------------------------------------")
     
