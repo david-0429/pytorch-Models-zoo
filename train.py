@@ -27,6 +27,7 @@ def parse_option():
   parser.add_argument('--pretrain', default=False, help='use pretrained model or not')
   
   parser.add_argument('--epochs', default=200, type=int, help='number of total epochs to run')
+  parser.add_argument('--val_interval', default=1, type=int, help='validation interval epochs')
   parser.add_argument('--batch_size', default=64, type=int, help='mini-batch size (default: 256)')
   parser.add_argument('--lr', default=0.001, type=float, help='initial learning rate')
   '''
@@ -37,6 +38,9 @@ def parse_option():
   parser.add_argument('--DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
   parser.add_argument('--DA_test', default='non', type=str)
   parser.add_argument('--gpu', action='store_true', default=False, help='use gpu or not')
+  
+  # Important!
+  parser.add_argument('--grad_sample_num', default=1024, type=int, help='number of samples to store gradient')
 
   args = parser.parse_args()
 
@@ -45,7 +49,7 @@ def parse_option():
 args = parse_option()
 
 
-#wandb init
+# wandb init
 print("wandb init")
 def get_timestamp():
     return datetime.now().strftime("%b%d_%H-%M-%S")
@@ -57,7 +61,7 @@ wandb.init(
 )
 wandb.config.update(args)
 
-#Data_loader
+# Data_loader
 if args.data == 'CIFAR10':
   train_loader = CIFAR10_loader(args, is_train=True)
   test_loader = CIFAR10_loader(args, is_train=False)
@@ -66,7 +70,7 @@ elif args.data == 'CIFAR100':
   test_loader = CIFAR100_loader(args, is_train=False)
   
   
-#model 
+# model 
 if args.data =='CIFAR10':
   model = get_network(args, class_num=CIFAR10_CLASS_NUM, pretrain=args.pretrain)
 elif args.data =='CIFAR100':
@@ -77,7 +81,7 @@ loss_function = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=args.lr) # momentum=0.9, weight_decay=5e-4
     
 
-#train    
+# Training   
 def train(model, epoch):
 
     epoch_start_time = time.time()
@@ -114,7 +118,7 @@ def train(model, epoch):
     return train_loss / (b_idx + 1), correct / total * 100
 
 
-#val
+# Validation
 def validation(model):
     epoch_start_time = time.time()
     model.eval()
@@ -144,11 +148,48 @@ def validation(model):
     return val_loss / (b_idx + 1), correct / total * 100
 
 
+
+# Gradient store
+def grad_store(model, epoch):
+
+    epoch_start_time = time.time()
+    model.train()
+
+    loss = 0
+    grad_dic = {
+                'epoch' : 0.0,
+                'batch' : 0.0,
+                'layer' : {}
+              }
+    
+    for batch_idx, (images, targets) in enumerate(train_loader):
+
+        if batch_idx == args.grad_sample_num / args.batch_size: #args.grad_sample_num 만큼만 gradient 확인
+          break
+
+        images, targets = images.cuda(), targets.cuda()
+            
+        outputs = model(images)
+        loss = loss_function(outputs, targets)
+        loss.backward()
+        import pdb
+        # Extract gradients
+        for name, param in model.named_parameters():
+          if param.grad is not None:
+            grad_dic["layer"][name] = 0.0
+            pdb.set_trace()
+            grad_dic["layer"][name] += param.grad.mean().item() / count
+
+# Start Running
 for epoch in range(args.epochs):
     
+    grad_store(model, epoch)
     train_loss, train_accuracy = train(model, epoch)
-    test_loss, test_accuracy = validation(model)
+
+    if epoch % args.val_interval == 0:
+      test_loss, test_accuracy = validation(model)
     
+    grad_store(model, epoch)
     print("-------------------------------------------------------------------------")
     
 wandb.finish()
