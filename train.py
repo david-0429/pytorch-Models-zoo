@@ -16,6 +16,7 @@ from data.CIFAR10 import CIFAR10_loader
 from data.CIFAR100 import CIFAR100_loader
 
 from model import get_network
+from utils import extract_grad, make_grad_list
 from conf import CIFAR10_CLASS_NUM, CIFAR100_CLASS_NUM
 
 
@@ -148,7 +149,6 @@ def validation(model):
     return val_loss / (b_idx + 1), correct / total * 100
 
 
-
 # Gradient store
 def grad_store(model, epoch):
 
@@ -156,15 +156,11 @@ def grad_store(model, epoch):
     model.train()
 
     loss = 0
-    grad_dic = {
-                'epoch' : 0.0,
-                'batch' : 0.0,
-                'layer' : {}
-              }
+    grad_list = make_grad_list(args.epochs, 50000 // args.batch_size, 18)
     
     for batch_idx, (images, targets) in enumerate(train_loader):
 
-        if batch_idx == args.grad_sample_num / args.batch_size: #args.grad_sample_num 만큼만 gradient 확인
+        if batch_idx == args.grad_sample_num / args.batch_size: # args.grad_sample_num만큼만 gradient 확인
           break
 
         images, targets = images.cuda(), targets.cuda()
@@ -172,24 +168,28 @@ def grad_store(model, epoch):
         outputs = model(images)
         loss = loss_function(outputs, targets)
         loss.backward()
-        import pdb
+        
         # Extract gradients
         for name, param in model.named_parameters():
           if param.grad is not None:
-            grad_dic["layer"][name] = 0.0
-            pdb.set_trace()
-            grad_dic["layer"][name] += param.grad.mean().item() / count
+              import pdb
+              pdb.set_trace()
+              layer_num = int(''.join(filter(str.isdigit, name)))
+              mean_grad = param.grad.mean().item()
+              grad_list[epoch][batch_idx][layer_num] = mean_grad
+
+    return grad_list
+
 
 # Start Running
 for epoch in range(args.epochs):
     
-    grad_store(model, epoch)
     train_loss, train_accuracy = train(model, epoch)
-
     if epoch % args.val_interval == 0:
       test_loss, test_accuracy = validation(model)
     
-    grad_store(model, epoch)
+    grad_dic = grad_store(model, epoch)
+    print(grad_dic)
     print("-------------------------------------------------------------------------")
     
 wandb.finish()
