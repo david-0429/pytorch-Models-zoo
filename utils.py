@@ -40,6 +40,31 @@ def transformed(args, mean, std, train=True):
   
 #-------------------------------------------------------------------------------------------------------
 
+def extract_grad(grad_dic, model):
+
+  for name, param in model.named_parameters():
+    if param.grad is not None:
+      grad_dic["layer"][name] += param.grad.mean()
+
+  return grad_dic
+
+
+def make_grad_list(num_epochs, num_batches_per_epoch, num_layers):
+    grad_list = []
+
+    for _ in range(num_epochs):
+        epoch_list = []
+
+        for _ in range(num_batches_per_epoch):
+            batch_dict = {layer_num: None for layer_num in range(num_layers)}
+            epoch_list.append(batch_dict)
+
+        grad_list.append(epoch_list)
+
+    return grad_list
+#-------------------------------------------------------------------------------------------------------
+
+
 def adjust_learning_rate(epoch, opt, optimizer):
     """Sets the learning rate to the initial LR decayed by decay rate every steep step"""
     steps = np.sum(epoch > np.asarray(opt.lr_decay_epochs))
