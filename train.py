@@ -16,9 +16,7 @@ from data.CIFAR10 import CIFAR10_loader
 from data.CIFAR100 import CIFAR100_loader
 
 from model import get_network
-from utils import extract_grad, make_grad_list
-from conf import CIFAR10_CLASS_NUM, CIFAR100_CLASS_NUM
-
+from utils import make_noisy_label, calc_mean_grad, grad_store
 
 def parse_option():
   parser = argparse.ArgumentParser()
@@ -43,6 +41,9 @@ def parse_option():
   # Important!
   parser.add_argument('--grad_sample_num', default=1024, type=int, help='number of samples to store gradient')
   parser.add_argument('--noisy_comb_len', default=10, type=int, help='number of combinations of noisy labels')
+  
+  parser.add_argument('--normal_grad_path', default="normal_grad_dict.pt", type=str, help='file path for store normal gradient')
+  parser.add_argument('--noisy_grad_path', default="noisy_grad_dict.pt", type=str, help='file path for store noisy gradient')
   args = parser.parse_args()
 
   return args
@@ -66,16 +67,18 @@ wandb.config.update(args)
 if args.data == 'CIFAR10':
   train_loader = CIFAR10_loader(args, is_train=True)
   test_loader = CIFAR10_loader(args, is_train=False)
+  cls_num = 10
 elif args.data == 'CIFAR100':
   train_loader = CIFAR100_loader(args, is_train=True)
   test_loader = CIFAR100_loader(args, is_train=False)
+  cls_num = 100
   
   
 # model 
 if args.data =='CIFAR10':
-  model = get_network(args, class_num=CIFAR10_CLASS_NUM, pretrain=args.pretrain)
+  model = get_network(args, class_num=cls_num, pretrain=args.pretrain)
 elif args.data =='CIFAR100':
-  model = get_network(args, class_num=CIFAR100_CLASS_NUM, pretrain=args.pretrain)
+  model = get_network(args, class_num=cls_num, pretrain=args.pretrain)
 
 
 loss_function = nn.CrossEntropyLoss()
@@ -149,56 +152,21 @@ def validation(model):
     return val_loss / (b_idx + 1), correct / total * 100
 
 
-# Gradient store
-def grad_store(model, epoch):
-
-    epoch_start_time = time.time()
-    model.train()
-
-    loss = 0
-    grad_list = make_grad_list(args.epochs, 50000 // args.batch_size, 18)
-    
-    for batch_idx, (images, targets) in enumerate(train_loader):
-
-        if batch_idx == args.grad_sample_num / args.batch_size: # args.grad_sample_num만큼만 gradient 확인
-          break
-
-        images, targets = images.cuda(), targets.cuda()
-            
-        outputs = model(images)
-        loss = loss_function(outputs, targets)
-        loss.backward()
-        
-        # Extract gradients
-        for name, param in model.named_parameters():
-          if param.grad is not None:
-              import pdb
-              pdb.set_trace()
-              layer_num = int(''.join(filter(str.isdigit, name)))
-              mean_grad = param.grad.mean().item()
-              grad_list[epoch][batch_idx][layer_num] = mean_grad
-
-    return grad_list
-
-
-from collections import defaultdict
-
-
 # Start Running
 normal_grad_epochs_dict = {}
 noisy_grad_epochs_dict = {}
 
-for epoch in range(epochs):
+for epoch in range(args.epochs):
 
-    # train_loss, train_accuracy = train(model, epoch)
-    # if epoch % val_interval == 0:
-    #   test_loss, test_accuracy = validation(model)
+    train_loss, train_accuracy = train(model, epoch)
+    if epoch % args.val_interval == 0:
+      test_loss, test_accuracy = validation(model)
 
     # Store grad_dic
     normal_grad_list = []
     noisy_grad_batch_list = []
     for batch_idx, (images, targets) in enumerate(train_loader):
-      if batch_idx == grad_sample_num / batch_size: # gradient check only : args.grad_sample_num
+      if batch_idx == args.grad_sample_num / args.batch_size: # gradient check only : args.grad_sample_num
           break
 
       images, targets = images.cuda(), targets.cuda()
@@ -210,7 +178,7 @@ for epoch in range(epochs):
       # Get noisy data grads
       noisy_grad_c_list = []
       for _ in range(agrs.noisy_comb_len):
-          noisy_targets = make_noisy_label(targets)
+          noisy_targets = make_noisy_label(targets, cls_num)
           noisy_grad_c_dict = grad_store(images, noisy_targets, model)
           noisy_grad_c_list.append(noisy_grad_c_dict)
 
@@ -220,6 +188,8 @@ for epoch in range(epochs):
     normal_grad_epochs_dict[f'epoch_{epoch}'] = calc_mean_grad(normal_grad_list)
     noisy_grad_epochs_dict[f'epoch_{epoch}'] = calc_mean_grad(noisy_grad_batch_list)
 
+    torch.save(normal_grad_epochs_dict, args.normal_grad_path)
+    torch.save(noisy_grad_epochs_dict, args.noisy_grad_path )
     print("-------------------------------------------------------------------------")
     
 wandb.finish()
