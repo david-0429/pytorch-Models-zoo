@@ -34,7 +34,7 @@ def parse_option():
   parser.add_argument('--lr_decay_epochs', type=str, default='100,150,180', help='where to decay lr, can be a list')
   parser.add_argument('--lr_decay_rate', type=float, default=0.1, help='decay rate for learning rate')
   '''
-  parser.add_argument('--DA', default='flip_crop', type=str, choices=['non', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
+  parser.add_argument('--DA', default='none', type=str, choices=['none', 'flip_crop', 'flip_crop_AA', 'flip_crop_RA'])
   parser.add_argument('--DA_test', default='non', type=str)
   parser.add_argument('--gpu', action='store_true', default=False, help='use gpu or not')
   
