@@ -47,7 +47,18 @@ where the flags are explained as:
   
  - `--DA`: specify the Data Augmentation in training time, default: 'flip_crop'
  - `--DA_test`: specify the Data Augmentation in testing time, default: 'non'
- - `--gpu` : use gpu or not, default: 'False'
+ - `--gpu`: use gpu or not, default: 'False'
+
+ Important!!
+ - '--grad_sample_num': number of samples to store gradient, default: '1024'
+ - '--noisy_comb_len': number of combinations of noisy labels, default: '10'
+ - '--normal_grad_path': 
+ - '--noisy_grad_path': 
+ -  parser.add_argument('--grad_sample_num', default=1024, type=int, help='number of samples to store gradient')
+  parser.add_argument('--noisy_comb_len', default=10, type=int, help='number of combinations of noisy labels')
+  
+  parser.add_argument('--normal_grad_path', default="normal_grad_dict.pt", type=str, help='file path for store normal gradient')
+  parser.add_argument('--noisy_grad_path', default="noisy_grad_dict.pt", type=str, help='file path for store noisy gradient')
  
 
 
