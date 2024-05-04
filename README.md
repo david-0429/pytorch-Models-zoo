@@ -34,7 +34,9 @@ Run ```train.py```
 --batch_size 256 \
 --lr 0.01 \
 --DA non \
---gpu
+--gpu \
+--grad_sample_num 1024 \
+--noisy_comb_len 10 
 ```
 where the flags are explained as:
  - `--data`: specify the datasets of model, default: 'CIFAR100'
@@ -50,20 +52,13 @@ where the flags are explained as:
  - `--gpu`: use gpu or not, default: 'False'
 
  Important!!
- - '--grad_sample_num': number of samples to store gradient, default: '1024'
- - '--noisy_comb_len': number of combinations of noisy labels, default: '10'
- - '--normal_grad_path': 
- - '--noisy_grad_path': 
- -  parser.add_argument('--grad_sample_num', default=1024, type=int, help='number of samples to store gradient')
-  parser.add_argument('--noisy_comb_len', default=10, type=int, help='number of combinations of noisy labels')
-  
-  parser.add_argument('--normal_grad_path', default="normal_grad_dict.pt", type=str, help='file path for store normal gradient')
-  parser.add_argument('--noisy_grad_path', default="noisy_grad_dict.pt", type=str, help='file path for store noisy gradient')
- 
+ - `--grad_sample_num`: number of samples to store gradient, default: '1024'
+ - `--noisy_comb_len`: number of combinations of noisy labels, default: '10'
+ - `--normal_grad_path`: file path for store normal gradient, default: 'normal_grad_dict.pt'
+ - `--noisy_grad_path`: file path for store noisy gradient, default: 'noisy_grad_dict.pt'
 
 
 #### Data Augmentation
  - `non` : no data augmentation
  - `flip_crop` : RandomCrop + RandomHorizontalFlip
- - `flip_crop_AA` : RandomCrop + RandomHorizontalFlip + AutoAugment
- - `flip_crop_RA` : RandomCrop + RandomHorizontalFlip + RandAugment(n=2, m=14)
+
