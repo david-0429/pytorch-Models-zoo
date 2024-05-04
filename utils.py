@@ -5,6 +5,8 @@ import sys
 import re
 import argparse
 import timm
+import random
+from collections import defaultdict
 
 import torch
 import torchvision
@@ -36,32 +38,60 @@ def transformed(args, mean, std, train=True):
         ])
     
     return transform
-  
-  
+
+
+def make_noisy_label(true_labels, cls_num):
+
+    noisy_label = []
+    for t_l in true_labels:
+        label_list = np.arange(cls_num)
+
+        # Delete the true label within whole label list
+        label_list = np.delete(label_list, int(t_l))
+        noisy_label.append(random.choice(label_list))
+
+    noisy_labels = torch.tensor(noisy_label)
+    return noisy_labels.cuda()
+            
 #-------------------------------------------------------------------------------------------------------
 
-def extract_grad(grad_dic, model):
+# Gradient store
+def grad_store(images, targets, model):
+    model.train()
+    grad_dict = defaultdict(list)
 
-  for name, param in model.named_parameters():
-    if param.grad is not None:
-      grad_dic["layer"][name] += param.grad.mean()
+    outputs = model(images)
 
-  return grad_dic
+    loss = loss_function(outputs, targets)
+    loss.backward()
+
+    # Extract gradients
+    for i, (name, param) in enumerate(model.named_parameters()):
+        if ('layer' in name) and ('conv' in name):
+            key = name.split('.')[0]
+            value = np.array(param.grad.clone().cpu())
+            grad_dict[key].append(value)
+    return grad_dict
 
 
-def make_grad_list(num_epochs, num_batches_per_epoch, num_layers):
-    grad_list = []
+# Calculate mean gradient of all batch
+def calc_mean_grad(grad_batch_list):
 
-    for _ in range(num_epochs):
-        epoch_list = []
+  for i, batch_dict in enumerate(grad_batch_list):
+    if i == 0:
+        epoch_grad_dict = batch_dict.copy()
 
-        for _ in range(num_batches_per_epoch):
-            batch_dict = {layer_num: None for layer_num in range(num_layers)}
-            epoch_list.append(batch_dict)
+    else:
+        for key, value in batch_dict.items():
+            epoch_grad_dict[key] += value
+  
+  # Get mean grad vectors w.r.t. batch
+    for key, value in epoch_grad_dict.items():
+        epoch_grad_dict[key] = [x / len(grad_batch_list) for x in value]
 
-        grad_list.append(epoch_list)
 
-    return grad_list
+  return epoch_grad_dict
+            
 #-------------------------------------------------------------------------------------------------------
 
 
