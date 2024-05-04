@@ -17,7 +17,7 @@ import torchvision.transforms as transforms
 def transformed(args, mean, std, train=True):
 
     if train:
-      if args.DA == "non":
+      if args.DA == "none":
           transform = transforms.Compose([
               transforms.ToTensor(),
               transforms.Normalize(mean, std)
