@@ -38,12 +38,6 @@ def parse_option():
   parser.add_argument('--DA_test', default='non', type=str)
   parser.add_argument('--gpu', action='store_true', default=False, help='use gpu or not')
   
-  # Important!
-  parser.add_argument('--grad_sample_num', default=1024, type=int, help='number of samples to store gradient')
-  parser.add_argument('--noisy_comb_len', default=10, type=int, help='number of combinations of noisy labels')
-  
-  parser.add_argument('--normal_grad_path', default="normal_grad_dict.pt", type=str, help='file path for store normal gradient')
-  parser.add_argument('--noisy_grad_path', default="noisy_grad_dict.pt", type=str, help='file path for store noisy gradient')
   args = parser.parse_args()
 
   return args
@@ -153,43 +147,11 @@ def validation(model):
 
 
 # Start Running
-normal_grad_epochs_dict = {}
-noisy_grad_epochs_dict = {}
-
 for epoch in range(args.epochs):
 
     train_loss, train_accuracy = train(model, epoch)
     if epoch % args.val_interval == 0:
       test_loss, test_accuracy = validation(model)
-
-    # Store grad_dic
-    normal_grad_list = []
-    noisy_grad_batch_list = []
-    for batch_idx, (images, targets) in enumerate(train_loader):
-      if batch_idx == args.grad_sample_num / args.batch_size: # gradient check only : args.grad_sample_num
-          break
-
-      images, targets = images.cuda(), targets.cuda()
-
-      normal_grad_batch_dict = grad_store(images, targets, model)
-      normal_grad_list.append(normal_grad_batch_dict)
-      torch.cuda.empty_cache()
-
-      # Get noisy data grads
-      noisy_grad_c_list = []
-      for _ in range(agrs.noisy_comb_len):
-          noisy_targets = make_noisy_label(targets, cls_num)
-          noisy_grad_c_dict = grad_store(images, noisy_targets, model)
-          noisy_grad_c_list.append(noisy_grad_c_dict)
-
-      noisy_grad_batch_list.append(calc_mean_grad(noisy_grad_c_list))
-      torch.cuda.empty_cache()
-
-    normal_grad_epochs_dict[f'epoch_{epoch}'] = calc_mean_grad(normal_grad_list)
-    noisy_grad_epochs_dict[f'epoch_{epoch}'] = calc_mean_grad(noisy_grad_batch_list)
-
-    torch.save(normal_grad_epochs_dict, args.normal_grad_path)
-    torch.save(noisy_grad_epochs_dict, args.noisy_grad_path )
     print("-------------------------------------------------------------------------")
     
 wandb.finish()
